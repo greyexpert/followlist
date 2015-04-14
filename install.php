@@ -29,4 +29,4 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-OW::getLanguage()->importPluginLangs(OW::getPluginManager()->getPlugin('followlist')->getRootDir() . 'langs.zip', 'followlist');
+OW::getLanguage()->importPluginLangs(dirname(__FILE__) . DS . 'langs.zip', 'followlist');
