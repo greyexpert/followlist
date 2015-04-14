@@ -29,4 +29,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+OW::getRouter()->addRoute(new OW_Route('followlist-user-followers', 'user/:userName/followers', 'FOLLOWLIST_CTRL_List', 'userFollowers'));
+
+FOLLOWLIST_CLASS_EventHandler::getInstance()->init();
 FOLLOWLIST_CLASS_NewsfeedBridge::getInstance()->init();

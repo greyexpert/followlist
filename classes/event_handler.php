@@ -31,21 +31,21 @@
 
 /**
  * @author Sergey Kambalin <greyexpert@gmail.com>
- * @package followlist.bol
+ * @package followlist.classes
  */
-class FOLLOWLIST_BOL_UserDao extends BOL_UserDao
+class FOLLOWLIST_CLASS_EventHandler
 {
     /**
      * Singleton instance.
      *
-     * @var FOLLOWLIST_BOL_UserDao
+     * @var FOLLOWLIST_CLASS_EventHandler
      */
     private static $classInstance;
 
     /**
      * Returns an instance of class (singleton pattern implementation).
      *
-     * @return FOLLOWLIST_BOL_UserDao
+     * @return FOLLOWLIST_CLASS_EventHandler
      */
     public static function getInstance()
     {
@@ -56,42 +56,14 @@ class FOLLOWLIST_BOL_UserDao extends BOL_UserDao
 
         return self::$classInstance;
     }
-    
-    public function findUserListByIdList( array $idList, array $limit )
-    {
-        if ( empty($idList) )
-        {
-            return array();
-        }
-        
-        $queryParts = $this->getUserQueryFilter("u", "id", array(
-            "method" => "FOLLOWLIST_BOL_UserDao::findUserListByIdList"
-        ));
 
-        $query = "SELECT `u`.* FROM `{$this->getTableName()}` AS `u` "
-            . $queryParts["join"] . " "
-            . "WHERE u.id IN (" . $this->dbo->mergeInClause($idList) . ") AND {$queryParts["where"]} " 
-            . "ORDER BY `u`.`activityStamp` DESC" . ( !empty($queryParts["order"]) ? ", " . $queryParts["order"] : "" ) . " "
-            . "LIMIT ?,?";
-            
-        return $this->dbo->queryForObjectList($query, $this->getDtoClassName(), $limit);
+    private function __construct()
+    {
+        
     }
-    
-    public function findUserCountByIdList( $idList )
+       
+    public function init()
     {
-        if ( empty($idList) )
-        {
-            return 0;
-        }
-        
-        $queryParts = $this->getUserQueryFilter("u", "id", array(
-            "method" => "FOLLOWLIST_BOL_UserDao::findUserCountByIdList"
-        ));
-
-        $query = "SELECT COUNT(DISTINCT `u`.id) FROM `{$this->getTableName()}` AS `u` "
-            . $queryParts["join"] . " "
-            . "WHERE u.id IN (" . $this->dbo->mergeInClause($idList) . ") AND {$queryParts["where"]}";
-
-        return $this->dbo->queryForColumn($query);
+        // Initialization here
     }
 }

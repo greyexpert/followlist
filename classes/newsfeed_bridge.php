@@ -40,14 +40,14 @@ class FOLLOWLIST_CLASS_NewsfeedBridge
     /**
      * Singleton instance.
      *
-     * @var FLISTS_CLASS_NewsfeedBridge
+     * @var FOLLOWLIST_CLASS_NewsfeedBridge
      */
     private static $classInstance;
 
     /**
      * Returns an instance of class (singleton pattern implementation).
      *
-     * @return FLISTS_CLASS_NewsfeedBridge
+     * @return FOLLOWLIST_CLASS_NewsfeedBridge
      */
     public static function getInstance()
     {
