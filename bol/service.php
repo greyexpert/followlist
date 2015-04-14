@@ -29,4 +29,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-FOLLOWLIST_CLASS_NewsfeedBridge::getInstance()->init();
+/**
+ * @author Sergey Kambalin <greyexpert@gmail.com>
+ * @package followlist.bol
+ */
+class FOLLOWLIST_BOL_Service
+{
+   private static $classInstance;
+
+    /**
+     * Returns class instance
+     *
+     * @return FOLLOWLIST_BOL_Service
+     */
+    public static function getInstance()
+    {
+        if ( null === self::$classInstance )
+        {
+            self::$classInstance = new self();
+        }
+
+        return self::$classInstance;
+    }
+
+    /**
+     *
+     * @var FOLLOWLIST_BOL_UserDao
+     */
+    private $userDao;
+    
+    /**
+     * Class constructor
+     *
+     */
+    protected function __construct()
+    {
+        $this->userDao = FOLLOWLIST_BOL_UserDao::getInstance();
+    }
+    
+    
+    public function findUserListByIdList( array $idList, array $limit )
+    {
+        return $this->userDao->findUserListByIdList($idList, $limit);
+    }
+    
+    public function findUserCountByIdList( array $idList )
+    {
+        return $this->userDao->findUserCountByIdList($idList);
+    }
+}
