@@ -32,5 +32,3 @@
 OW::getRouter()->addRoute(new OW_Route('followlist-user-followers', 'user/:userName/followers', 'FOLLOWLIST_CTRL_List', 'userFollowers'));
 
 FOLLOWLIST_CLASS_EventHandler::getInstance()->init();
-FOLLOWLIST_CLASS_NewsfeedBridge::getInstance()->init();
-FOLLOWLIST_CLASS_SnippetsBridge::getInstance()->init();

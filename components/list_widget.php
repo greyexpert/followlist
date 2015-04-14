@@ -73,7 +73,7 @@ class FOLLOWLIST_CMP_ListWidget extends BASE_CLASS_Widget
             self::SETTING_SHOW_TITLE => true,
             self::SETTING_WRAP_IN_BOX => true,
             self::SETTING_TITLE => OW_Language::getInstance()->text('followlist', 'widget_title'),
-            self::SETTING_ICON => self::ICON_USER
+            self::SETTING_ICON => self::ICON_FRIENDS
         );
     }
 

@@ -61,9 +61,69 @@ class FOLLOWLIST_CLASS_EventHandler
     {
         
     }
+    
+    public function onCollectPrivacyActionList( BASE_CLASS_EventCollector $event )
+    {
+        $language = OW::getLanguage();
+
+        $action = array(
+            'key' => 'followers_view',
+            'pluginKey' => 'followlist',
+            'label' => $language->text('followlist', 'privacy_action_view_followers'),
+            'description' => '',
+            'defaultValue' => 'everybody'
+        );
+
+        $event->add($action);
+    }
+    
+    public function onCollectQuickLinks( BASE_CLASS_EventCollector $event )
+    {
+        $userId = OW::getUser()->getId();
+
+        $count = FOLLOWLIST_CLASS_NewsfeedBridge::getInstance()
+                ->getFollowingUsersCount(FOLLOWLIST_CLASS_NewsfeedBridge::FEED_TYPE_USER, $userId);
+        
+        if ( empty($count) )
+        {
+            return;
+        }
+
+        $url = OW::getRouter()->urlForRoute("followlist-user-followers", array(
+            "userName" => OW::getUser()->getUserObject()->username
+        ));
+        
+        $event->add(array(
+            BASE_CMP_QuickLinksWidget::DATA_KEY_LABEL => OW::getLanguage()->text('followlist', 'quick_links_label'),
+            BASE_CMP_QuickLinksWidget::DATA_KEY_URL => $url,
+            BASE_CMP_QuickLinksWidget::DATA_KEY_COUNT => $count,
+            BASE_CMP_QuickLinksWidget::DATA_KEY_COUNT_URL => $url
+        ));
+    }
+    
+    public function onAddAdminNotifications( BASE_CLASS_EventCollector $e )
+    {
+        $language = OW::getLanguage();
+        $e->add($language->text('followlist', 'admin_plugin_required_notification', array(
+            'pluginUrl' => 'http://www.oxwall.org/store/item/43'
+        )));
+    }
+    
        
     public function init()
     {
-        // Initialization here
+        if ( !FOLLOWLIST_CLASS_NewsfeedBridge::getInstance()->isActive() )
+        {
+            OW::getEventManager()->bind('admin.add_admin_notification', array($this, 'onAddAdminNotifications'));
+            
+            return;
+        }
+        
+        FOLLOWLIST_CLASS_NewsfeedBridge::getInstance()->init();
+        FOLLOWLIST_CLASS_SnippetsBridge::getInstance()->init();
+        FOLLOWLIST_CLASS_HintBridge::getInstance()->init();
+        
+        OW::getEventManager()->bind('base.add_quick_link', array($this, 'onCollectQuickLinks'));
+        OW::getEventManager()->bind('plugin.privacy.get_action_list', array($this,'onCollectPrivacyActionList'));
     }
 }

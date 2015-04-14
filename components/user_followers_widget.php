@@ -7,6 +7,23 @@ class FOLLOWLIST_CMP_UserFollowersWidget extends FOLLOWLIST_CMP_ListWidget
         $feedId = $params->additionalParamList['entityId'];
         
         parent::__construct(FOLLOWLIST_CLASS_NewsfeedBridge::FEED_TYPE_USER, $feedId, $params);
+        
+        $eventParams =  array(
+            'action' => 'followers_view',
+            'ownerId' => $feedId,
+            'viewerId' => OW::getUser()->getId()
+        );
+        
+        try
+        {
+            OW::getEventManager()->getInstance()->call('privacy_check_permission', $eventParams);
+        }
+        catch( RedirectException $exception )
+        {
+            $this->setVisible(false);
+            
+            return;
+        }
     }
     
     protected function getViewAllUrl($feedType, $feedId) 

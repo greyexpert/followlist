@@ -12,6 +12,25 @@ class FOLLOWLIST_CTRL_List extends OW_ActionController
             throw new Redirect404Exception;
         }
         
+        $eventParams =  array(
+            'action' => 'followers_view',
+            'ownerId' => $user->id,
+            'viewerId' => OW::getUser()->getId()
+        );
+        
+        OW::getEventManager()->getInstance()->call('privacy_check_permission', $eventParams);
+        
+        OW::getNavigation()->activateMenuItem(BOL_NavigationService::MENU_TYPE_MAIN, "base", "users_main_menu_item");
+        
+        $language = OW::getLanguage();
+        
+        $assigns = array(
+            "user" => BOL_UserService::getInstance()->getDisplayName($user->id)
+        );
+        
+        OW::getDocument()->setTitle($language->text("followlist", "user_followers_page_title", $assigns));
+        OW::getDocument()->setHeading($language->text("followlist", "user_followers_page_heading", $assigns));
+        
         return $this->index(array(
             "feedType" => FOLLOWLIST_CLASS_NewsfeedBridge::FEED_TYPE_USER,
             "feedId" => $user->id
