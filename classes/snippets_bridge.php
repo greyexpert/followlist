@@ -79,7 +79,8 @@ class FOLLOWLIST_CLASS_SnippetsBridge
         {
             return;
         }
-        
+
+        $showEmpty = true;
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
@@ -111,44 +112,45 @@ class FOLLOWLIST_CLASS_SnippetsBridge
         
         $newsfeedBridge = FOLLOWLIST_CLASS_NewsfeedBridge::getInstance();
         $users = $newsfeedBridge->getFollowingUsers(FOLLOWLIST_CLASS_NewsfeedBridge::FEED_TYPE_USER, $userId, array(0, 4));
-        
-        if ( empty($users) )
-        {
-            return;
-        }
-        
-        $idList = array();
-        
-        foreach ( $users as $user )
-        {
-            $idList[] = $user->id;
-        }
         $total = $newsfeedBridge->getFollowingUsersCount(FOLLOWLIST_CLASS_NewsfeedBridge::FEED_TYPE_USER, $userId);
-                
-        $usersData = BOL_AvatarService::getInstance()->getDataForUserAvatars($idList, true, false, false, false);
-        
-        $images = array();
-        foreach ( $usersData as $user )
-        {
-            $images[] = $user["src"];
-        }
-        
-        $dispslayType = count($images) > 1 ? SNIPPETS_CMP_Snippet::DISPLAY_TYPE_4 : SNIPPETS_CMP_Snippet::DISPLAY_TYPE_1;
-        
+
         $userName = BOL_UserService::getInstance()->getUserName($userId);
         $url = OW::getRouter()->urlForRoute('followlist-user-followers', array(
             'userName'=>$userName
         ));
-        
-        $snippet->setImages($images);
+
         $snippet->setLabel($language->text("followlist", "snippet_label", array(
             "count" => '<span class="ow_txt_value">' . $total . '</span>'
         )));
-        
+
         $snippet->setUrl($url);
-        $snippet->setDisplayType($dispslayType);
-        
-        $event->add($snippet);
+
+        if ( !empty($users) )
+        {
+            $idList = array();
+
+            foreach ( $users as $user )
+            {
+                $idList[] = $user->id;
+            }
+
+            $usersData = BOL_AvatarService::getInstance()->getDataForUserAvatars($idList, true, false, false, false);
+
+            $images = array();
+            foreach ( $usersData as $user )
+            {
+                $images[] = $user["src"];
+            }
+
+            $displayType = count($images) > 1 ? SNIPPETS_CMP_Snippet::DISPLAY_TYPE_4 : SNIPPETS_CMP_Snippet::DISPLAY_TYPE_1;
+            $snippet->setDisplayType($displayType);
+
+            $snippet->setImages($images);
+        }
+
+        if (!empty($users) || $showEmpty) {
+            $event->add($snippet);
+        }
     }
     
     public function init()
