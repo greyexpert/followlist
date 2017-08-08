@@ -80,7 +80,7 @@ class FOLLOWLIST_CLASS_SnippetsBridge
             return;
         }
 
-        $showEmpty = true;
+        $showEmpty = !$params["hideEmpty"];
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
